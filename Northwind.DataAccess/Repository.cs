@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using Dapper;
+using System;
 
 namespace Northwind.DataAccess
 {
@@ -12,20 +13,23 @@ namespace Northwind.DataAccess
         {
             _connectionString = connectionString;
         }
-        public bool Delete(int id)
+        public bool Delete(T entity)
         {
             using(var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string deleteQuery = "DELETE FROM " + typeof(T).Name + " WHERE Id = @Id;";
-                if(connection.Execute(deleteQuery, new { Id = id })>=1)
+                var primaryKeyProperty = typeof(T).GetProperty("Id");
+                if(primaryKeyProperty == null)
                 {
-                    return true;
+                    throw new InvalidOperationException("The entity does not have a primary key 'Id'.");
                 }
-                else
-                {
-                    return false;
-                }
+
+                int idValue = (int )primaryKeyProperty.GetValue(entity);
+                string deleteQuery = $"DELETE FROM {typeof(T).Name} WHERE Id=@Id";
+
+                int rowsAffected = connection.Execute(deleteQuery, new {Id=idValue});
+
+                return rowsAffected > 0;
             }
         }
 
@@ -55,8 +59,33 @@ namespace Northwind.DataAccess
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "INSERT INTO " + typeof(T).Name + " VALUES /**/;";
-                return connection.Execute(query, entity);
+                
+                var properties = typeof(T).GetProperties();
+                var insertQuery = $"INSERT INTO {typeof(T).Name} (";
+                var insertValues = "VALUES (";
+                var parameters = new DynamicParameters();
+
+                foreach(var property in properties)
+                {
+                    if (property.Name != "Id")
+                    {
+                        insertQuery += $"{property.Name}, ";
+                        insertValues += $"@{property.Name}, ";
+                        parameters.Add($"@{property.Name}", property.GetValue(entity));
+                    }
+                }
+
+                insertQuery = insertQuery.TrimEnd(',', ' ');
+                insertQuery += ") ";
+
+                insertValues = insertValues.TrimEnd(',', ' ');
+                insertValues += ")";
+
+                insertQuery += insertValues;
+
+                int rowsAffected = connection.Execute(insertQuery, parameters);
+
+                return rowsAffected;
             }
         }
 
@@ -65,15 +94,28 @@ namespace Northwind.DataAccess
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "UPDATE " + typeof(T).Name + " SET /**/ WHERE Id = @Id;";
-                if (connection.Execute(query, entity) >= 1)
+
+                var properties = typeof(T).GetProperties();
+                var updateQuery = $"UPDATE {typeof(T).Name} SET ";
+                var parameters = new DynamicParameters();
+
+                foreach(var property in properties)
                 {
-                    return true;
+                    if (property.Name != "Id")
+                    {
+                        updateQuery += $"{property.Name} = @{property.Name}, ";
+                        parameters.Add($"@{property.Name}", property.GetValue(entity));
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+
+                updateQuery = updateQuery.TrimEnd(',', ' ');
+                updateQuery += " WHERE Id = @Id";
+                parameters.Add("@Id", typeof(T).GetProperty("Id").GetValue(entity));
+
+
+                int rowsAffected = connection.Execute(updateQuery, parameters);
+
+                return rowsAffected > 0;
             }
         }
     }
