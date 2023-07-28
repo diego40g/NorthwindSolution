@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "67098dc3-048a-4380-831a-39ae0c0ac9ce",
+		"name": "Northwind",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10404684"
+	},
+	"item": [
+		{
+			"name": "FindOne",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/Customer/92",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Customer",
+						"92"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pagination",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/Customer/GetPaginatedCustomer/90/100",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Customer",
+						"GetPaginatedCustomer",
+						"90",
+						"100"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOne",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Diego\",\r\n  \"lastName\": \"Paz\",\r\n  \"city\": \"Quito\",\r\n  \"country\": \"Ecuador\",\r\n  \"phone\": \"9084910\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/Customer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatingOne",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": \"92\",\r\n  \"firstName\": \"Ignacio\",\r\n  \"lastName\": \"Paz\",\r\n  \"city\": \"Quito\",\r\n  \"country\": \"Ecuador\",\r\n  \"phone\": \"9084910\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/Customer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Customer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\":\"92\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/Customer/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"Customer",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
