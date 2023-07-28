@@ -19,21 +19,21 @@ namespace Northwind.WebApi.Controllers
         {
             return Ok(_unitOfWork.Customer.GetById(id));
         }
-
+        
         [HttpGet]
-        [Route("GetPaginatedCustomer/{page: int}/{rows:int}")]
+        [Route("GetPaginatedCustomer/{page:int}/{rows:int}")]
         public IActionResult GetPaginatedCustomer(int page, int rows)
         {
             return Ok(_unitOfWork.Customer.CustomerPagedList(page, rows));
         }
-
+        
         [HttpPost]
         public IActionResult Post([FromBody]Customer customer)
         {
             if (!ModelState.IsValid) return BadRequest();
             return Ok(_unitOfWork.Customer.Insert(customer));
         }
-
+        
         [HttpPut]
         public IActionResult Put([FromBody]Customer customer)
         {
@@ -45,10 +45,10 @@ namespace Northwind.WebApi.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete([FromBody]int id)
+        public IActionResult Delete([FromBody]Customer customer)
         {
-            if (id > 0)
-                return Ok(_unitOfWork.Customer.Delete(id));
+            if (customer.Id>0)
+                return Ok(_unitOfWork.Customer.Delete(customer));
             return BadRequest();
         }
     }
