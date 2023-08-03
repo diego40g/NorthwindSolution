@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Northwind.Models;
 using Northwind.UnitOfWork;
 
 namespace Northwind.WebApi.Controllers
 {
     [Route("api/Customer")]
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
