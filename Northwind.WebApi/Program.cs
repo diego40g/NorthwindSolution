@@ -2,6 +2,7 @@ using Northwind.DataAccess;
 using Northwind.UnitOfWork;
 using Northwind.WebApi.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Northwind.WebApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,17 @@ builder.Services.AddAuthorization(auth =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Cors
+var corsSettings = builder.Configuration.GetSection("CorsSettings").Get<CorsSettings>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder => builder
+            .WithOrigins(corsSettings.AllowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +53,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowOrigin");
 
 app.UseAuthentication();
 
