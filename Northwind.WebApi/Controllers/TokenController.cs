@@ -23,7 +23,8 @@ namespace Northwind.WebApi.Controllers
             var user = _unitOfWork.User.ValidateUser(userLogin.Email, userLogin.Password);
             if (user == null)
             {
-                throw new UnauthorizedAccessException();
+                //throw new UnauthorizedAccessException();
+                return new JsonWebToken { };
             }
 
             var token = new JsonWebToken
