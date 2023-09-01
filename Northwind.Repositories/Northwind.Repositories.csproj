@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICustomerRepository.cs" />
+    <Compile Include="IOrderRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="ISupplierRepository.cs" />
     <Compile Include="IUserRepository.cs" />
