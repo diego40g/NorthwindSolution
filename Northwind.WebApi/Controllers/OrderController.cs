@@ -21,5 +21,11 @@ namespace Northwind.WebApi.Controllers
         {
             return Ok(_unitOfWork.Order.getPaginatedOrder(page, rows));
         }
+        [HttpGet]
+        [Route("GetOrderByID/{orderId:int}")]
+        public IActionResult GetOrderById(int orderId)
+        {
+            return Ok(_unitOfWork.Order.GetOrderById(orderId));
+        }
     }
 }
