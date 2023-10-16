@@ -33,5 +33,25 @@ namespace Northwind.DataAccess
                 return orderList;
             }
         }
+        
+        public OrderList GetOrderById (int orderId)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@orderId", orderId);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var reader = connection.QueryMultiple("dbo.get_orders_by_id",
+                                                        parameters,
+                                                        commandType: System.Data.CommandType.StoredProcedure);
+                var orderList = reader.Read<OrderList>().ToList();
+                var orderItemList = reader.Read<OrderItemList>().ToList();
+
+                foreach (var item in orderList) item.SetDetails(orderItemList);
+
+                return orderList.FirstOrDefault();
+
+            }
+        }
     }
 }
